@@ -9,12 +9,17 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     assetsDir: 'assets',
-    // Assicuriamoci che i file PWA rimangano nella root della dist
     rollupOptions: {
       input: {
         main: './index.html',
       }
     }
+  },
+  resolve: {
+    alias: {
+      // Assicura che Vite trovi i moduli anche se importati con percorsi relativi complessi
+      '@': '/src',
+    },
   },
   define: {
     'process.env.API_KEY': JSON.stringify(process.env.API_KEY)
