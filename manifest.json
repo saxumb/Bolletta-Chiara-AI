@@ -1,8 +1,9 @@
 
 {
+  "id": "com.bollettachiara.ai.pwa",
   "short_name": "BollettaChiara",
   "name": "BollettaChiara AI: Trasparenza Energia",
-  "description": "Fai luce sulla tua bolletta con l'intelligenza artificiale.",
+  "description": "L'intelligenza artificiale per analizzare, simulare e risparmiare sulle tue bollette Luce e Gas in Italia.",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/2933/2933116.png",
@@ -17,11 +18,42 @@
       "purpose": "maskable"
     }
   ],
-  "start_url": "./",
+  "screenshots": [
+    {
+      "src": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426&ixlib=rb-4.0.3",
+      "sizes": "1280x720",
+      "type": "image/jpg",
+      "form_factor": "wide",
+      "label": "Analisi AI della Bolletta"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1551288049-bbbda536339a?auto=format&fit=crop&q=80&w=1000",
+      "sizes": "1000x1500",
+      "type": "image/jpg",
+      "form_factor": "narrow",
+      "label": "Simulazione Costi Mensili"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Simulatore Luce",
+      "url": "/?mode=luce",
+      "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/2933/2933116.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Simulatore Gas",
+      "url": "/?mode=gas",
+      "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/2933/2933116.png", "sizes": "192x192" }]
+    }
+  ],
+  "start_url": "./index.html",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "minimal-ui"],
   "orientation": "portrait",
   "theme_color": "#2563eb",
   "background_color": "#f8fafc",
-  "categories": ["finance", "utilities"],
-  "lang": "it-IT"
+  "categories": ["finance", "utilities", "productivity"],
+  "lang": "it-IT",
+  "dir": "ltr",
+  "prefer_related_applications": false
 }
