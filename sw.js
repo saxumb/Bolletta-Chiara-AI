@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'bollettachiara-v2';
+const CACHE_NAME = 'bollettachiara-v3';
 const OFFLINE_URL = './index.html';
 
 const ASSETS = [
@@ -31,18 +31,15 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.mode === 'navigate') {
-    event.respondWith(
-      fetch(event.request).catch(() => {
-        return caches.match(OFFLINE_URL);
-      })
-    );
-    return;
-  }
+  // Ignora le chiamate API
+  if (event.request.url.includes('generativelanguage.googleapis.com')) return;
 
   event.respondWith(
     caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
+      if (response) return response;
+      return fetch(event.request).catch(() => {
+        if (event.request.mode === 'navigate') return caches.match(OFFLINE_URL);
+      });
     })
   );
 });
