@@ -261,9 +261,12 @@ const App: React.FC = () => {
               </div>
             )}
             
-            <div className={!advice && !loadingAdvice ? 'mt-0' : 'mt-8'}>
-              <DonationCard />
-            </div>
+            {/* DonationCard principale: visibile solo quando NON sta caricando l'analisi */}
+            {!loadingAdvice && (
+              <div className={!advice ? 'mt-0' : 'mt-8'}>
+                <DonationCard />
+              </div>
+            )}
           </div>
         </div>
       </main>
