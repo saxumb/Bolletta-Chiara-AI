@@ -34,7 +34,7 @@
       "label": "Simulazione Costi Mensili"
     }
   ],
-  "start_url": ".",
+  "start_url": "https://saxumb.github.io/Bolletta-Chiara-AI/",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
