@@ -1,14 +1,16 @@
 
-const CACHE_NAME = 'bollettachiara-v6';
+const CACHE_NAME = 'bollettachiara-v8';
 const OFFLINE_ASSETS = [
+  './',
   'index.html',
-  'manifest.json'
+  'manifest.json',
+  'index.css'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      // Usiamo add invece di addAll per evitare che un singolo fallimento blocchi tutto
+      // Adding assets one by one or with allSettled to prevent failure if one is missing
       return Promise.allSettled(OFFLINE_ASSETS.map(asset => cache.add(asset)));
     })
   );
@@ -27,7 +29,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Non intercettare chiamate API esterne (Gemini)
+  // Ignore API calls to Google/Gemini for caching
   if (event.request.url.includes('google') || event.request.url.includes('googleapis')) {
     return;
   }
@@ -37,7 +39,7 @@ self.addEventListener('fetch', (event) => {
       if (cachedResponse) return cachedResponse;
       
       return fetch(event.request).catch(() => {
-        // Fallback su index.html per navigazione offline
+        // If navigation fails (offline), return index.html
         if (event.request.mode === 'navigate') {
           return caches.match('index.html');
         }

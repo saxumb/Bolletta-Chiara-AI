@@ -14,8 +14,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BollettaChiara">
     
-    <!-- Icona App (Base64 SVG per coerenza logo) -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMCIgZmlsbD0iI2ZmZmZmZiIvPgogIDxwYXRoIGQ9Ik0yMjAgNjBMMTAwIDMwMGgxMDB2MTUwbDE1MC0yNDBIMjIwVjYweiIgZmlsbD0iIzNiODJmNiIvPgogIDxwYXRoIGQ9Ik0zNDAgMzAwYzAgNjAtNTAgMTAwLTUwIDEwMHMtNzAtNDAtNzAtMTAwYzAtMTIwIDEyMC0yMjAgMTIwLTIyMHMzMCA0MCAzMCAxMDAiIGZpbGw9IiNmOTczMTYiIG9wYWNpdHk9IjAuOSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAsIDEwKSIvPgo8L3N2Zz4=">
+    <!-- Icona App -->
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2731/2731636.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -40,7 +40,6 @@
     </style>
     
     <script>
-        // Registrazione Service Worker semplificata
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
@@ -48,11 +47,7 @@
                         console.log('BollettaChiara SW: Registrato con successo', reg.scope);
                     })
                     .catch(err => {
-                        if (err.name === 'SecurityError' || err.message.includes('origin')) {
-                            console.warn('BollettaChiara SW: Registrazione non disponibile in questo ambiente.');
-                        } else {
-                            console.error('BollettaChiara SW Error:', err);
-                        }
+                        console.error('BollettaChiara SW Error:', err);
                     });
             });
         }
