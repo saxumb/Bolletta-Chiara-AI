@@ -1,13 +1,12 @@
 
-const CACHE_NAME = 'bollettachiara-v3';
-const OFFLINE_URL = './index.html';
+const CACHE_NAME = 'bollettachiara-v4';
+const OFFLINE_URL = 'index.html';
 
 const ASSETS = [
   './',
-  './index.html',
-  './manifest.json',
-  'https://cdn.tailwindcss.com',
-  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap'
+  'index.html',
+  'manifest.json',
+  'https://cdn.tailwindcss.com'
 ];
 
 self.addEventListener('install', (event) => {
@@ -31,13 +30,11 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Ignora le chiamate API
   if (event.request.url.includes('generativelanguage.googleapis.com')) return;
 
   event.respondWith(
     caches.match(event.request).then((response) => {
-      if (response) return response;
-      return fetch(event.request).catch(() => {
+      return response || fetch(event.request).catch(() => {
         if (event.request.mode === 'navigate') return caches.match(OFFLINE_URL);
       });
     })

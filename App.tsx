@@ -180,14 +180,14 @@ const App: React.FC = () => {
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-20 flex items-center shadow-sm">
         <div className="container mx-auto px-6 flex items-center justify-between max-w-7xl">
           <div className="flex items-center gap-3">
-            {/* NUOVO LOGO HYBRID ENERGY */}
-            <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-500 ${isLuce ? 'bg-blue-600' : 'bg-orange-600'}`}>
-               <svg viewBox="0 0 24 24" className="w-7 h-7 text-white" fill="currentColor">
+            {/* NUOVO LOGO HYBRID ENERGY: Bolt + Flame custom SVG */}
+            <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-500 overflow-hidden ${isLuce ? 'bg-blue-600' : 'bg-orange-600'}`}>
+               <svg viewBox="0 0 24 24" className="w-7 h-7 text-white fill-current">
                   {/* Bolt (Luce) */}
-                  <path d="M11.5 2L3 13H10V22L18.5 11H11.5V2Z" className={isLuce ? 'opacity-100' : 'opacity-40'} />
-                  {/* Flame (Gas) Overlay stylizzato */}
+                  <path d="M11 2L4 14H11V22L18 10H11V2Z" className={isLuce ? 'opacity-100' : 'opacity-40'} />
+                  {/* Flame (Gas) stylized overlay */}
                   {!isLuce && (
-                    <path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" className="opacity-100 mix-blend-screen" />
+                    <path d="M12 2C12 2 7 7 7 13C7 15.7614 9.23858 18 12 18C14.7614 18 17 15.7614 17 13C17 7 12 2 12 2ZM12 15C10.8954 15 10 14.1046 10 13C10 12 11 10 12 9C13 10 14 12 14 13C14 14.1046 13.1046 15 12 15Z" className="opacity-100" />
                   )}
                </svg>
             </div>

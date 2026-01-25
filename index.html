@@ -7,13 +7,14 @@
     <title>BollettaChiara AI - Trasparenza Energia</title>
     
     <!-- PWA Settings -->
-    <link rel="manifest" href="./manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563eb">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BollettaChiara">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/10832/10832132.png">
+    <!-- Nuova Icona Premium (Smart Energy Pulse) -->
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/12185/12185966.png">
 
     <!-- SEO & Store Meta -->
     <meta name="description" content="BollettaChiara AI: Il simulatore intelligente per fare luce sui costi di luce e gas.">
@@ -41,13 +42,9 @@
             -webkit-user-select: none;
             user-select: none;
         }
-        
-        .custom-scroll {
-            -webkit-overflow-scrolling: touch;
-        }
     </style>
     
-    <!-- Service Worker Registration for PWABuilder -->
+    <!-- Service Worker Registration -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -78,6 +75,8 @@
 </head>
 <body class="bg-slate-50 text-slate-900 no-select">
     <div id="root"></div>
+    <!-- Punto di ingresso dell'applicazione -->
+    <script type="module" src="./index.tsx"></script>
 <script type="module" src="/index.tsx"></script>
 </body>
 </html>
