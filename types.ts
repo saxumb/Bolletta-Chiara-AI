@@ -1,8 +1,13 @@
 
 export type SimulationMode = 'luce' | 'gas';
+export type TariffType = 'fixed' | 'variable';
 
 export interface BillInput {
   // Common / Electricity
+  tariffTypeLuce: TariffType;
+  punValue: number | '';
+  spreadLuce: number | '';
+
   monthlyKwh: number | '';
   isMultioraria: boolean;
   energyPrice: number | ''; // Monoraria
@@ -24,6 +29,10 @@ export interface BillInput {
   autoDispatching: boolean;
   
   // Gas Specific
+  tariffTypeGas: TariffType;
+  psvValue: number | '';
+  spreadGas: number | '';
+
   monthlySmc: number | '';
   gasPrice: number | '';
   qvdFixed: number | '';

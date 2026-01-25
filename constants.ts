@@ -2,6 +2,10 @@
 // Default Inputs
 export const DEFAULT_INPUTS = {
   // LUCE
+  tariffTypeLuce: 'fixed' as const,
+  punValue: 0.10,   // Valore indicativo PUN
+  spreadLuce: 0.02, // Spread indicativo
+  
   monthlyKwh: 220,
   isMultioraria: false,
   energyPrice: 0.125,
@@ -22,6 +26,10 @@ export const DEFAULT_INPUTS = {
   autoDispatching: true,    
 
   // GAS
+  tariffTypeGas: 'fixed' as const,
+  psvValue: 0.40,  // Valore indicativo PSV
+  spreadGas: 0.10, // Spread indicativo
+
   monthlySmc: 100,
   gasPrice: 0.45,
   qvdFixed: 10.00,

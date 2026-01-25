@@ -9,7 +9,7 @@ interface InputCardProps {
   mode: SimulationMode;
 }
 
-const InputCard: React.FC<InputCardProps> = ({ inputs, setInputs, mode }) => {
+export const InputCard: React.FC<InputCardProps> = ({ inputs, setInputs, mode }) => {
   const [showDist, setShowDist] = useState(false);
 
   const handleChange = (key: keyof BillInput, value: any) => {
@@ -90,126 +90,189 @@ const InputCard: React.FC<InputCardProps> = ({ inputs, setInputs, mode }) => {
         {/* --- SEZIONE LUCE --- */}
         {isLuce && (
           <div className="space-y-6">
-            {/* TIPO TARIFFA */}
+            
+            {/* TIPO TARIFFA: FISSO vs VARIABILE */}
             <div>
-              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 text-center">Tipo Tariffa</label>
-              <div className="bg-slate-100 p-1 rounded-2xl flex gap-1">
-                <button 
-                  onClick={() => handleChange('isMultioraria', false)}
-                  className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all ${!inputs.isMultioraria ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 text-center">Tipo Prezzo</label>
+              <div className="bg-slate-100 p-1 rounded-2xl flex gap-1 mb-4">
+                 <button 
+                  onClick={() => handleChange('tariffTypeLuce', 'fixed')}
+                  className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all ${inputs.tariffTypeLuce === 'fixed' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
                 >
-                  MONORARIA
+                  PREZZO FISSO
                 </button>
                 <button 
-                  onClick={() => handleChange('isMultioraria', true)}
-                  className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all ${inputs.isMultioraria ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
+                  onClick={() => handleChange('tariffTypeLuce', 'variable')}
+                  className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all ${inputs.tariffTypeLuce === 'variable' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500'}`}
                 >
-                  FASCE (F1, F2, F3)
+                  VARIABILE (PUN)
                 </button>
               </div>
             </div>
 
-            {/* PREZZI ENERGIA */}
-            {!inputs.isMultioraria ? (
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Energia (€/kWh)</label>
-                    <input
-                      type="number"
-                      step="0.0001"
-                      value={inputs.energyPrice}
-                      onChange={(e) => handleNumChange('energyPrice', e.target.value)}
-                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-blue-500 transition-all font-semibold text-slate-700 outline-none"
-                    />
+            {/* CONTROLLI PREZZO LUCE */}
+            {inputs.tariffTypeLuce === 'fixed' ? (
+                // --- MODE: FISSO ---
+                <div className="space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
+                     <div>
+                        <div className="flex justify-between items-center mb-2 px-1">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Fasce Orarie</label>
+                            <div className="flex bg-slate-100 rounded-lg p-0.5">
+                                <button onClick={() => handleChange('isMultioraria', false)} className={`px-2 py-1 rounded-md text-[9px] font-bold ${!inputs.isMultioraria ? 'bg-white shadow text-blue-600' : 'text-slate-400'}`}>MONO</button>
+                                <button onClick={() => handleChange('isMultioraria', true)} className={`px-2 py-1 rounded-md text-[9px] font-bold ${inputs.isMultioraria ? 'bg-white shadow text-blue-600' : 'text-slate-400'}`}>MULTI</button>
+                            </div>
+                        </div>
+
+                        {!inputs.isMultioraria ? (
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Energia (€/kWh)</label>
+                                <input
+                                type="number"
+                                step="0.0001"
+                                value={inputs.energyPrice}
+                                onChange={(e) => handleNumChange('energyPrice', e.target.value)}
+                                className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-blue-500 transition-all font-semibold text-slate-700 outline-none"
+                                />
+                            </div>
+                             <div>
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Potenza (kW)</label>
+                                <select
+                                value={inputs.powerKw}
+                                onChange={(e) => handleChange('powerKw', parseFloat(e.target.value))}
+                                className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-blue-500 transition-all font-semibold text-slate-700 outline-none appearance-none"
+                                >
+                                {[1.5, 3, 4.5, 6, 10].map(v => <option key={v} value={v}>{v} kW</option>)}
+                                </select>
+                            </div>
+                        </div>
+                        ) : (
+                        <div className="space-y-4">
+                            <div className="grid grid-cols-3 gap-3">
+                                <div className="bg-blue-50 p-3 rounded-2xl border border-blue-100">
+                                <div className="flex items-center gap-1 mb-2">
+                                    <span className="text-amber-500">☀️</span>
+                                    <label className="text-[9px] font-black text-blue-800 uppercase">F1</label>
+                                </div>
+                                <input 
+                                    type="number" step="0.0001" value={inputs.energyPriceF1} 
+                                    onChange={(e) => handleNumChange('energyPriceF1', e.target.value)}
+                                    className="w-full bg-transparent border-b border-blue-200 outline-none font-bold text-blue-900 text-sm"
+                                />
+                                </div>
+                                <div className="bg-cyan-50 p-3 rounded-2xl border border-cyan-100">
+                                <div className="flex items-center gap-1 mb-2">
+                                    <span className="text-cyan-500">⛅</span>
+                                    <label className="text-[9px] font-black text-cyan-800 uppercase">F2</label>
+                                </div>
+                                <input 
+                                    type="number" step="0.0001" value={inputs.energyPriceF2} 
+                                    onChange={(e) => handleNumChange('energyPriceF2', e.target.value)}
+                                    className="w-full bg-transparent border-b border-cyan-200 outline-none font-bold text-cyan-900 text-sm"
+                                />
+                                </div>
+                                <div className="bg-slate-100 p-3 rounded-2xl border border-slate-200">
+                                <div className="flex items-center gap-1 mb-2">
+                                    <span className="text-slate-400">🌙</span>
+                                    <label className="text-[9px] font-black text-slate-600 uppercase">F3</label>
+                                </div>
+                                <input 
+                                    type="number" step="0.0001" value={inputs.energyPriceF3} 
+                                    onChange={(e) => handleNumChange('energyPriceF3', e.target.value)}
+                                    className="w-full bg-transparent border-b border-slate-300 outline-none font-bold text-slate-800 text-sm"
+                                />
+                                </div>
+                            </div>
+
+                            {/* DISTRIBUZIONE % */}
+                            <div className="border-t border-slate-100 pt-3">
+                                <button 
+                                onClick={() => setShowDist(!showDist)}
+                                className="w-full flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors"
+                                >
+                                <span>Distribuzione Consumo %</span>
+                                <span>{showDist ? '▲' : '▼'}</span>
+                                </button>
+                                {showDist && (
+                                <div className="grid grid-cols-3 gap-4 mt-3 animate-in slide-in-from-top-2 duration-300">
+                                    <div>
+                                    <label className="block text-[8px] text-slate-400 mb-1">F1 %</label>
+                                    <input type="number" value={inputs.percContentF1} onChange={(e) => handleChange('percContentF1', parseInt(e.target.value))} className="w-full p-2 bg-slate-50 border rounded-lg text-xs font-bold" />
+                                    </div>
+                                    <div>
+                                    <label className="block text-[8px] text-slate-400 mb-1">F2 %</label>
+                                    <input type="number" value={inputs.percContentF2} onChange={(e) => handleChange('percContentF2', parseInt(e.target.value))} className="w-full p-2 bg-slate-50 border rounded-lg text-xs font-bold" />
+                                    </div>
+                                    <div>
+                                    <label className="block text-[8px] text-slate-400 mb-1">F3 %</label>
+                                    <input type="number" value={inputs.percContentF3} onChange={(e) => handleChange('percContentF3', parseInt(e.target.value))} className="w-full p-2 bg-slate-50 border rounded-lg text-xs font-bold" />
+                                    </div>
+                                </div>
+                                )}
+                            </div>
+
+                             <div className="pt-2">
+                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Potenza (kW)</label>
+                                <select
+                                value={inputs.powerKw}
+                                onChange={(e) => handleChange('powerKw', parseFloat(e.target.value))}
+                                className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-blue-500 transition-all font-semibold text-slate-700 outline-none appearance-none"
+                                >
+                                {[1.5, 3, 4.5, 6, 10].map(v => <option key={v} value={v}>{v} kW</option>)}
+                                </select>
+                            </div>
+                        </div>
+                        )}
+                     </div>
                 </div>
-                <div>
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Potenza (kW)</label>
-                    <select
-                      value={inputs.powerKw}
-                      onChange={(e) => handleChange('powerKw', parseFloat(e.target.value))}
-                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-blue-500 transition-all font-semibold text-slate-700 outline-none appearance-none"
-                    >
-                      {[1.5, 3, 4.5, 6, 10].map(v => <option key={v} value={v}>{v} kW</option>)}
-                    </select>
-                </div>
-              </div>
             ) : (
-              <div className="space-y-4">
-                 <div className="grid grid-cols-3 gap-3">
-                    <div className="bg-blue-50 p-3 rounded-2xl border border-blue-100">
-                      <div className="flex items-center gap-1 mb-2">
-                        <span className="text-amber-500">☀️</span>
-                        <label className="text-[9px] font-black text-blue-800 uppercase">F1</label>
-                      </div>
-                      <input 
-                        type="number" step="0.0001" value={inputs.energyPriceF1} 
-                        onChange={(e) => handleNumChange('energyPriceF1', e.target.value)}
-                        className="w-full bg-transparent border-b border-blue-200 outline-none font-bold text-blue-900 text-sm"
-                      />
+                // --- MODE: VARIABILE ---
+                <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                             <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">PUN Base (€/kWh)</label>
+                             <div className="relative">
+                                <input 
+                                    type="number" step="0.0001" 
+                                    value={inputs.punValue}
+                                    onChange={(e) => handleNumChange('punValue', e.target.value)}
+                                    className="w-full px-3 py-2 bg-white border-2 border-blue-100 rounded-xl font-bold text-blue-900 focus:border-blue-500 outline-none"
+                                />
+                             </div>
+                        </div>
+                         <div>
+                             <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Spread / Fee (€/kWh)</label>
+                             <div className="relative">
+                                <input 
+                                    type="number" step="0.0001" 
+                                    value={inputs.spreadLuce}
+                                    onChange={(e) => handleNumChange('spreadLuce', e.target.value)}
+                                    className="w-full px-3 py-2 bg-white border-2 border-slate-200 rounded-xl font-bold text-slate-700 focus:border-slate-500 outline-none"
+                                />
+                             </div>
+                        </div>
                     </div>
-                    <div className="bg-cyan-50 p-3 rounded-2xl border border-cyan-100">
-                      <div className="flex items-center gap-1 mb-2">
-                        <span className="text-cyan-500">⛅</span>
-                        <label className="text-[9px] font-black text-cyan-800 uppercase">F2</label>
-                      </div>
-                      <input 
-                        type="number" step="0.0001" value={inputs.energyPriceF2} 
-                        onChange={(e) => handleNumChange('energyPriceF2', e.target.value)}
-                        className="w-full bg-transparent border-b border-cyan-200 outline-none font-bold text-cyan-900 text-sm"
-                      />
+                    
+                    <div className="bg-blue-50 p-3 rounded-xl border border-blue-100 flex justify-between items-center">
+                         <span className="text-[10px] font-bold text-blue-800 uppercase">Totale Materia Stimato</span>
+                         <span className="text-sm font-black text-blue-600">
+                            {((inputs.punValue || 0) + (inputs.spreadLuce || 0)).toFixed(4)} €/kWh
+                         </span>
                     </div>
-                    <div className="bg-slate-100 p-3 rounded-2xl border border-slate-200">
-                      <div className="flex items-center gap-1 mb-2">
-                        <span className="text-slate-400">🌙</span>
-                        <label className="text-[9px] font-black text-slate-600 uppercase">F3</label>
-                      </div>
-                      <input 
-                        type="number" step="0.0001" value={inputs.energyPriceF3} 
-                        onChange={(e) => handleNumChange('energyPriceF3', e.target.value)}
-                        className="w-full bg-transparent border-b border-slate-300 outline-none font-bold text-slate-800 text-sm"
-                      />
-                    </div>
-                 </div>
 
-                 {/* DISTRIBUZIONE % */}
-                 <div className="border-t border-slate-100 pt-3">
-                    <button 
-                      onClick={() => setShowDist(!showDist)}
-                      className="w-full flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600 transition-colors"
-                    >
-                      <span>Distribuzione Consumo %</span>
-                      <span>{showDist ? '▲' : '▼'}</span>
-                    </button>
-                    {showDist && (
-                      <div className="grid grid-cols-3 gap-4 mt-3 animate-in slide-in-from-top-2 duration-300">
-                        <div>
-                          <label className="block text-[8px] text-slate-400 mb-1">F1 %</label>
-                          <input type="number" value={inputs.percContentF1} onChange={(e) => handleChange('percContentF1', parseInt(e.target.value))} className="w-full p-2 bg-slate-50 border rounded-lg text-xs font-bold" />
-                        </div>
-                        <div>
-                          <label className="block text-[8px] text-slate-400 mb-1">F2 %</label>
-                          <input type="number" value={inputs.percContentF2} onChange={(e) => handleChange('percContentF2', parseInt(e.target.value))} className="w-full p-2 bg-slate-50 border rounded-lg text-xs font-bold" />
-                        </div>
-                        <div>
-                          <label className="block text-[8px] text-slate-400 mb-1">F3 %</label>
-                          <input type="number" value={inputs.percContentF3} onChange={(e) => handleChange('percContentF3', parseInt(e.target.value))} className="w-full p-2 bg-slate-50 border rounded-lg text-xs font-bold" />
-                        </div>
-                      </div>
-                    )}
-                 </div>
-
-                 <div className="pt-2">
-                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Potenza (kW)</label>
-                    <select
-                      value={inputs.powerKw}
-                      onChange={(e) => handleChange('powerKw', parseFloat(e.target.value))}
-                      className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-blue-500 transition-all font-semibold text-slate-700 outline-none appearance-none"
-                    >
-                      {[1.5, 3, 4.5, 6, 10].map(v => <option key={v} value={v}>{v} kW</option>)}
-                    </select>
+                    <div className="pt-2">
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Potenza (kW)</label>
+                        <select
+                        value={inputs.powerKw}
+                        onChange={(e) => handleChange('powerKw', parseFloat(e.target.value))}
+                        className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-100 rounded-xl focus:border-blue-500 transition-all font-semibold text-slate-700 outline-none appearance-none"
+                        >
+                        {[1.5, 3, 4.5, 6, 10].map(v => <option key={v} value={v}>{v} kW</option>)}
+                        </select>
+                    </div>
                 </div>
-              </div>
             )}
+
 
             {/* COSTI FISSI LUCE */}
             <section className="bg-blue-50/50 border border-blue-100 p-5 rounded-3xl space-y-4">
@@ -296,34 +359,103 @@ const InputCard: React.FC<InputCardProps> = ({ inputs, setInputs, mode }) => {
                     </svg>
                     <h3 className="text-[10px] font-black text-orange-800 uppercase tracking-widest">La tua Offerta (Dipende dal Fornitore)</h3>
                 </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Materia Prima</label>
-                        <div className="relative">
-                            <input
-                            type="number"
-                            step="0.0001"
-                            value={inputs.gasPrice}
-                            onChange={(e) => handleNumChange('gasPrice', e.target.value)}
-                            className="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 outline-none"
-                            />
-                            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400">€/Smc</span>
-                        </div>
-                    </div>
-                    <div>
-                         <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Quota Fissa (QVD)</label>
-                        <div className="relative">
-                            <input
-                            type="number"
-                            value={inputs.qvdFixed}
-                            onChange={(e) => handleNumChange('qvdFixed', e.target.value)}
-                            className="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 outline-none"
-                            />
-                            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400">€/mese</span>
-                        </div>
-                    </div>
+
+                {/* TIPO TARIFFA GAS: FISSO vs VARIABILE */}
+                <div className="bg-white p-1 rounded-2xl flex gap-1 mb-2 border border-orange-100">
+                    <button 
+                    onClick={() => handleChange('tariffTypeGas', 'fixed')}
+                    className={`flex-1 py-2 rounded-xl text-[10px] font-bold transition-all ${inputs.tariffTypeGas === 'fixed' ? 'bg-orange-100 text-orange-700 shadow-sm' : 'text-slate-400'}`}
+                    >
+                    PREZZO FISSO
+                    </button>
+                    <button 
+                    onClick={() => handleChange('tariffTypeGas', 'variable')}
+                    className={`flex-1 py-2 rounded-xl text-[10px] font-bold transition-all ${inputs.tariffTypeGas === 'variable' ? 'bg-orange-100 text-orange-700 shadow-sm' : 'text-slate-400'}`}
+                    >
+                    VARIABILE (PSV)
+                    </button>
                 </div>
+                
+                {inputs.tariffTypeGas === 'fixed' ? (
+                     <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <div>
+                            <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Materia Prima</label>
+                            <div className="relative">
+                                <input
+                                type="number"
+                                step="0.0001"
+                                value={inputs.gasPrice}
+                                onChange={(e) => handleNumChange('gasPrice', e.target.value)}
+                                className="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 outline-none"
+                                />
+                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400">€/Smc</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Quota Fissa (QVD)</label>
+                            <div className="relative">
+                                <input
+                                type="number"
+                                value={inputs.qvdFixed}
+                                onChange={(e) => handleNumChange('qvdFixed', e.target.value)}
+                                className="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 outline-none"
+                                />
+                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400">€/m</span>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                         <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">PSV Base</label>
+                                <div className="relative">
+                                    <input
+                                    type="number"
+                                    step="0.0001"
+                                    value={inputs.psvValue}
+                                    onChange={(e) => handleNumChange('psvValue', e.target.value)}
+                                    className="w-full pl-3 pr-8 py-2 bg-white border border-orange-200 rounded-lg text-sm font-bold text-slate-700 outline-none"
+                                    />
+                                    <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400">€/Smc</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Spread / Fee</label>
+                                <div className="relative">
+                                    <input
+                                    type="number"
+                                    step="0.0001"
+                                    value={inputs.spreadGas}
+                                    onChange={(e) => handleNumChange('spreadGas', e.target.value)}
+                                    className="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 outline-none"
+                                    />
+                                    <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400">€/Smc</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex justify-between items-center bg-orange-100/50 p-2 rounded-lg">
+                             <span className="text-[10px] font-bold text-orange-800 uppercase">Totale Stimato</span>
+                             <span className="text-sm font-black text-orange-600">
+                                {((inputs.psvValue || 0) + (inputs.spreadGas || 0)).toFixed(4)} €/Smc
+                             </span>
+                        </div>
+                        
+                         <div>
+                            <label className="block text-[9px] font-bold text-slate-400 uppercase mb-1">Quota Fissa (QVD)</label>
+                            <div className="relative">
+                                <input
+                                type="number"
+                                value={inputs.qvdFixed}
+                                onChange={(e) => handleNumChange('qvdFixed', e.target.value)}
+                                className="w-full pl-3 pr-8 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-700 outline-none"
+                                />
+                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-slate-400">€/mese</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </section>
 
             <section className="p-5 border border-slate-100 rounded-3xl space-y-4">
@@ -411,5 +543,3 @@ const InputCard: React.FC<InputCardProps> = ({ inputs, setInputs, mode }) => {
     </div>
   );
 };
-
-export default InputCard;

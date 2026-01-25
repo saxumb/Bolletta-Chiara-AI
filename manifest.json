@@ -35,7 +35,7 @@
     }
   ],
   "start_url": "https://saxumb.github.io/Bolletta-Chiara-AI/",
-  "scope": "./",
+  "scope": "/Bolletta-Chiara-AI/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#2563eb",

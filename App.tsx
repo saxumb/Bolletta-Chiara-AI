@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import InputCard from './components/InputCard';
+import { InputCard } from './components/InputCard';
 import ResultCard from './components/ResultCard';
 import DonationCard from './components/DonationCard';
 import ExitModal from './components/ExitModal';
@@ -23,7 +23,6 @@ const App: React.FC = () => {
   const [loadingAdvice, setLoadingAdvice] = useState(false);
   const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [isExitModalOpen, setIsExitModalOpen] = useState(false);
-  const [pwaActive, setPwaActive] = useState(false);
   
   const adviceRef = useRef<HTMLDivElement>(null);
 
@@ -37,17 +36,6 @@ const App: React.FC = () => {
     }
     return () => clearInterval(interval);
   }, [loadingAdvice]);
-
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      // Timeout di sicurezza: se il SW non risponde in 3 secondi, mostriamo comunque lo stato (evita UI bloccata)
-      const timeout = setTimeout(() => setPwaActive(false), 3000);
-      navigator.serviceWorker.ready.then(() => {
-        clearTimeout(timeout);
-        setPwaActive(true);
-      }).catch(() => setPwaActive(false));
-    }
-  }, []);
 
   useEffect(() => {
     const updateStatusBar = async () => {
@@ -90,13 +78,22 @@ const App: React.FC = () => {
     if (mode === 'luce') {
       const monthlyKwh = n(inputs.monthlyKwh);
       let energyPrice = 0;
-      if (inputs.isMultioraria) {
-        energyPrice = (n(inputs.energyPriceF1) * (inputs.percContentF1/100)) + 
-                      (n(inputs.energyPriceF2) * (inputs.percContentF2/100)) + 
-                      (n(inputs.energyPriceF3) * (inputs.percContentF3/100));
+
+      // Logic: Fixed vs Variable
+      if (inputs.tariffTypeLuce === 'variable') {
+        const pun = n(inputs.punValue);
+        const spread = n(inputs.spreadLuce);
+        energyPrice = pun + spread;
       } else {
-        energyPrice = n(inputs.energyPrice);
+        if (inputs.isMultioraria) {
+          energyPrice = (n(inputs.energyPriceF1) * (inputs.percContentF1/100)) + 
+                        (n(inputs.energyPriceF2) * (inputs.percContentF2/100)) + 
+                        (n(inputs.energyPriceF3) * (inputs.percContentF3/100));
+        } else {
+          energyPrice = n(inputs.energyPrice);
+        }
       }
+
       const pcvFixed = n(inputs.pcvFixed);
       const kwhWithLosses = monthlyKwh * (1 + RATES.gridLossFactor);
       const dispFixedVal = inputs.autoDispatching ? ARERA_DISPATCHING.fixed : n(inputs.dispatchingFixed);
@@ -131,7 +128,17 @@ const App: React.FC = () => {
       };
     } else {
       const monthlySmc = n(inputs.monthlySmc);
-      const gasPrice = n(inputs.gasPrice);
+      let gasPrice = 0;
+      
+      // Logic: Fixed vs Variable
+      if (inputs.tariffTypeGas === 'variable') {
+        const psv = n(inputs.psvValue);
+        const spread = n(inputs.spreadGas);
+        gasPrice = psv + spread;
+      } else {
+        gasPrice = n(inputs.gasPrice);
+      }
+
       const qvdFixed = n(inputs.qvdFixed);
       const gasTransportFixed = inputs.autoGasTransport ? GAS_RATES.avgTransportFixed : n(inputs.gasTransportFixed);
       const gasTransportVar = inputs.autoGasTransport ? GAS_RATES.avgTransportVar : n(inputs.gasTransportVar);
@@ -179,7 +186,7 @@ const App: React.FC = () => {
   const isLuce = mode === 'luce';
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 pb-24 font-sans safe-top safe-bottom">
+    <div className="min-h-screen bg-slate-50 text-slate-900 pb-12 font-sans safe-top safe-bottom">
       <ExitModal isOpen={isExitModalOpen} onClose={() => setIsExitModalOpen(false)} isLuce={isLuce} />
 
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-20 flex items-center shadow-sm">
@@ -275,19 +282,6 @@ const App: React.FC = () => {
           </div>
         </div>
       </main>
-      
-      <footer className="fixed bottom-0 left-0 w-full p-6 flex flex-col items-center gap-3 z-40 pointer-events-none safe-bottom">
-          <div className="pointer-events-auto flex items-center gap-4 bg-white/90 backdrop-blur-md border border-slate-200 px-6 py-3 rounded-full shadow-2xl">
-            <div className="flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full ${pwaActive ? 'bg-green-500 animate-pulse' : 'bg-slate-300'}`}></div>
-              <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-                {pwaActive ? 'PWA: Attiva' : 'PWA: Standby'}
-              </span>
-            </div>
-            <div className="w-[1px] h-3 bg-slate-200"></div>
-            <button onClick={() => setIsExitModalOpen(true)} className="text-[9px] font-black text-slate-500 uppercase tracking-widest hover:text-slate-900 transition-colors">Esci</button>
-          </div>
-      </footer>
     </div>
   );
 };

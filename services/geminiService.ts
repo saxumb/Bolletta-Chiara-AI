@@ -2,9 +2,9 @@
 import { GoogleGenAI } from "@google/genai";
 import { BillInput, BillBreakdown, SimulationMode } from "../types";
 
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+
 export const getEnergyAdvice = async (inputs: BillInput, results: BillBreakdown, mode: SimulationMode): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  
   const isLuce = mode === 'luce';
   const typeLabel = isLuce ? "Elettrica" : "del Gas";
   const unit = isLuce ? "kWh" : "Smc";
@@ -16,23 +16,43 @@ export const getEnergyAdvice = async (inputs: BillInput, results: BillBreakdown,
 
   if (isLuce) {
     const power = inputs.powerKw;
-    const tariffa = inputs.isMultioraria ? "Multioraria (Fasce F1/F2/F3)" : "Monoraria";
+    const isVariable = inputs.tariffTypeLuce === 'variable';
     
+    // Determine Tariff Type
+    let tariffaLabel = "";
+    if (isVariable) {
+        tariffaLabel = "Variabile (Indicizzata PUN)";
+    } else {
+        tariffaLabel = inputs.isMultioraria ? "Fissa Multioraria (F1/F2/F3)" : "Fissa Monoraria";
+    }
+
     detailsSpecifici = `
     - Potenza Impegnata: ${power} kW
-    - Tipologia Contratto: ${tariffa}
+    - Tipologia Contratto: ${tariffaLabel}
     `;
 
-    if (inputs.isMultioraria) {
+    if (isVariable) {
+        priceInfo = `- Prezzo Index (PUN): ${inputs.punValue} €/kWh\n- Spread/Fee: ${inputs.spreadLuce} €/kWh`;
+    } else if (inputs.isMultioraria) {
       priceInfo = `
-      - Prezzi per Fascia: F1 ${inputs.energyPriceF1 || 0}€, F2 ${inputs.energyPriceF2 || 0}€, F3 ${inputs.energyPriceF3 || 0}€
-      - Distribuzione Consumi Utente: F1 ${inputs.percContentF1}%, F2 ${inputs.percContentF2}%, F3 ${inputs.percContentF3}%
+      - Prezzi Fissi per Fascia: F1 ${inputs.energyPriceF1 || 0}€, F2 ${inputs.energyPriceF2 || 0}€, F3 ${inputs.energyPriceF3 || 0}€
+      - Distribuzione Consumi: F1 ${inputs.percContentF1}%, F2 ${inputs.percContentF2}%, F3 ${inputs.percContentF3}%
       `;
     } else {
-      priceInfo = `- Prezzo Monorario: ${inputs.energyPrice || 0} €/kWh`;
+      priceInfo = `- Prezzo Fisso Monorario: ${inputs.energyPrice || 0} €/kWh`;
     }
   } else {
-    priceInfo = `- Prezzo Materia Prima: ${inputs.gasPrice || 0} €/Smc`;
+    // Gas
+    const isVariable = inputs.tariffTypeGas === 'variable';
+    const tariffaLabel = isVariable ? "Variabile (Indicizzata PSV)" : "Prezzo Fisso";
+    
+    detailsSpecifici = `- Tipologia Contratto: ${tariffaLabel}`;
+
+    if (isVariable) {
+        priceInfo = `- Prezzo Index (PSV): ${inputs.psvValue} €/Smc\n- Spread/Fee: ${inputs.spreadGas} €/Smc`;
+    } else {
+        priceInfo = `- Prezzo Fisso Materia Prima: ${inputs.gasPrice || 0} €/Smc`;
+    }
   }
 
   const prompt = `
@@ -61,7 +81,7 @@ export const getEnergyAdvice = async (inputs: BillInput, results: BillBreakdown,
     ${isLuce ? `
     Analisi specifica richiesta:
     1. Valuta il dimensionamento della potenza (${inputs.powerKw} kW).
-    2. Valuta se la tariffa (${inputs.isMultioraria ? 'Multioraria' : 'Monoraria'}) è ottimale per i prezzi inseriti.
+    2. Commenta la convenienza della tariffa scelta (${inputs.tariffTypeLuce === 'variable' ? 'Variabile PUN' : 'Fissa'}) rispetto all'attuale mercato.
     ` : ''}
 
     Usa uno stile professionale, empatico e molto diretto. Formatta in Markdown.
