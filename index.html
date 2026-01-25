@@ -8,14 +8,14 @@
     
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2563eb">
+    <meta name="theme-color" content="#0f172a">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BollettaChiara">
     
-    <!-- Icona App -->
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4341/4341355.png">
+    <!-- Icona App (Base64 SVG per coerenza logo) -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMCIgZmlsbD0iI2ZmZmZmZiIvPgogIDxwYXRoIGQ9Ik0yMjAgNjBMMTAwIDMwMGgxMDB2MTUwbDE1MC0yNDBIMjIwVjYweiIgZmlsbD0iIzNiODJmNiIvPgogIDxwYXRoIGQ9Ik0zNDAgMzAwYzAgNjAtNTAgMTAwLTUwIDEwMHMtNzAtNDAtNzAtMTAwYzAtMTIwIDEyMC0yMjAgMTIwLTIyMHMzMCA0MCAzMCAxMDAiIGZpbGw9IiNmOTczMTYiIG9wYWNpdHk9IjAuOSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAsIDEwKSIvPgo8L3N2Zz4=">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -43,13 +43,11 @@
         // Registrazione Service Worker semplificata
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // Utilizziamo un percorso relativo diretto per massimizzare la compatibilità
                 navigator.serviceWorker.register('./sw.js')
                     .then(reg => {
                         console.log('BollettaChiara SW: Registrato con successo', reg.scope);
                     })
                     .catch(err => {
-                        // Silenziamo gli errori di sicurezza in modalità anteprima/sviluppo
                         if (err.name === 'SecurityError' || err.message.includes('origin')) {
                             console.warn('BollettaChiara SW: Registrazione non disponibile in questo ambiente.');
                         } else {

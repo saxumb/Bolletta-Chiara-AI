@@ -192,15 +192,21 @@ const App: React.FC = () => {
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-20 flex items-center shadow-sm">
         <div className="container mx-auto px-6 flex items-center justify-between max-w-7xl">
           <div className="flex items-center gap-3">
-            {/* NUOVO LOGO HYBRID ENERGY: Bolt + Flame custom SVG */}
-            <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-500 overflow-hidden ${isLuce ? 'bg-blue-600' : 'bg-orange-600'}`}>
-               <svg viewBox="0 0 24 24" className="w-7 h-7 text-white fill-current">
-                  {/* Bolt (Luce) */}
-                  <path d="M11 2L4 14H11V22L18 10H11V2Z" className={isLuce ? 'opacity-100' : 'opacity-40'} />
-                  {/* Flame (Gas) stylized overlay */}
-                  {!isLuce && (
-                    <path d="M12 2C12 2 7 7 7 13C7 15.7614 9.23858 18 12 18C14.7614 18 17 15.7614 17 13C17 7 12 2 12 2ZM12 15C10.8954 15 10 14.1046 10 13C10 12 11 10 12 9C13 10 14 12 14 13C14 14.1046 13.1046 15 12 15Z" className="opacity-100" />
-                  )}
+            {/* LOGO HYBRID ENERGY: Bolt Azzurro + Fiamma Arancione */}
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-500 overflow-hidden bg-white border border-slate-100`}>
+               <svg viewBox="0 0 24 24" className="w-8 h-8">
+                  {/* Lightning Bolt (Luce) - Azzurro */}
+                  <path 
+                    d="M11 2L4 14H11V22L18 10H11V2Z" 
+                    className={`transition-all duration-500 ${isLuce ? 'fill-blue-500 scale-110' : 'fill-blue-200 scale-90'}`}
+                    style={{ transformOrigin: 'center' }}
+                  />
+                  {/* Flame (Gas) - Arancione */}
+                  <path 
+                    d="M14 13C14 16 12 18 12 18C9.23858 18 7 15.7614 7 13C7 7 12 2 12 2C12 2 13 4 13 7" 
+                    className={`transition-all duration-500 ${!isLuce ? 'fill-orange-500 scale-110 translate-x-1' : 'fill-orange-200 scale-75 translate-x-1'}`}
+                    style={{ transformOrigin: 'center' }}
+                  />
                </svg>
             </div>
             <h1 className="text-xl font-black tracking-tight hidden sm:block">BOLLETTA<span className={isLuce ? 'text-blue-600' : 'text-orange-600'}>CHIARA</span></h1>
