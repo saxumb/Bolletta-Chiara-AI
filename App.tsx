@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import InputCard from './components/InputCard';
 import ResultCard from './components/ResultCard';
 import DonationCard from './components/DonationCard';
@@ -8,15 +8,36 @@ import { BillInput, BillBreakdown, SimulationMode } from './types';
 import { DEFAULT_INPUTS, RATES, ARERA_DISPATCHING, GAS_RATES } from './constants';
 import { getEnergyAdvice } from './services/geminiService';
 
+const LOADING_MESSAGES = [
+  "🔍 Analizzando i tuoi consumi...",
+  "💡 Calcolando le migliori strategie di risparmio...",
+  "⚙️ Verificando le tariffe ARERA aggiornate...",
+  "✨ Ottimizzando il tuo profilo energetico...",
+  "📝 Generando il tuo report personalizzato..."
+];
+
 const App: React.FC = () => {
   const [inputs, setInputs] = useState<BillInput>(DEFAULT_INPUTS);
   const [mode, setMode] = useState<SimulationMode>('luce');
   const [advice, setAdvice] = useState<string | null>(null);
   const [loadingAdvice, setLoadingAdvice] = useState(false);
+  const [loadingMessageIndex, setLoadingMessageIndex] = useState(0);
   const [isExitModalOpen, setIsExitModalOpen] = useState(false);
   const [pwaActive, setPwaActive] = useState(false);
+  
+  const adviceRef = useRef<HTMLDivElement>(null);
 
-  // Verifica se il Service Worker è attivo (per feedback utente)
+  // Ciclo dei messaggi di caricamento per intrattenere l'utente
+  useEffect(() => {
+    let interval: number;
+    if (loadingAdvice) {
+      interval = window.setInterval(() => {
+        setLoadingMessageIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+      }, 2500);
+    }
+    return () => clearInterval(interval);
+  }, [loadingAdvice]);
+
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.ready.then(() => setPwaActive(true));
@@ -131,9 +152,20 @@ const App: React.FC = () => {
 
   const fetchAdvice = async () => {
     setLoadingAdvice(true);
+    setAdvice(null);
+    
+    // Scroll immediato all'area di caricamento/risultati
+    setTimeout(() => {
+      adviceRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+
     try {
         const result = await getEnergyAdvice(inputs, results, mode);
         setAdvice(result);
+        // Scroll fine analisi per mostrare l'inizio del testo
+        setTimeout(() => {
+          adviceRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
     } finally {
         setLoadingAdvice(false);
     }
@@ -150,7 +182,7 @@ const App: React.FC = () => {
           <div className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${isLuce ? 'bg-blue-600' : 'bg-orange-600'}`}>
                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d={isLuce ? "M13 10V3L4 14h7v7l9-11h-7z" : "M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"} />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d={isLuce ? "M13 10V3L4 14h7v7l9-11h-7z" : "M17.657 18.657A8 8 0 016.343 7.343S7 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"} />
                </svg>
             </div>
             <h1 className="text-xl font-black tracking-tight hidden sm:block">BOLLETTA<span className={isLuce ? 'text-blue-600' : 'text-orange-600'}>CHIARA</span></h1>
@@ -162,7 +194,15 @@ const App: React.FC = () => {
           </div>
           
           <button onClick={fetchAdvice} disabled={loadingAdvice} className={`flex items-center gap-2 text-white px-5 py-2.5 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all shadow-xl active:scale-95 disabled:opacity-50 ${isLuce ? 'bg-slate-900' : 'bg-orange-950'}`}>
-            {loadingAdvice ? "Analisi..." : "Analisi AI"}
+            {loadingAdvice ? (
+                <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Analisi...
+                </span>
+            ) : "Analisi AI"}
           </button>
         </div>
       </nav>
@@ -171,19 +211,53 @@ const App: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           <div className="lg:col-span-5 space-y-6">
             <InputCard inputs={inputs} setInputs={setInputs} mode={mode} />
-            <DonationCard />
           </div>
           <div className="lg:col-span-7 space-y-8">
             <ResultCard results={results} mode={mode} />
+            
             {(advice || loadingAdvice) && (
-              <div className="bg-white p-8 rounded-[2rem] shadow-2xl border border-slate-100">
+              <div ref={adviceRef} className="bg-white p-8 rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden relative scroll-mt-24">
+                {loadingAdvice && <div className="absolute top-0 left-0 w-full h-1 bg-slate-100"><div className="h-full bg-blue-600 animate-[loading_2s_ease-in-out_infinite]"></div><style>{`@keyframes loading { 0% { width: 0%; left: 0%; } 50% { width: 50%; left: 25%; } 100% { width: 0%; left: 100%; } }`}</style></div>}
+                
                 <h3 className="text-xl font-black text-slate-800 mb-6 flex items-center gap-3">
-                  <span className="text-2xl">✨</span> Analisi BollettaChiara
+                  <span className="text-2xl">{loadingAdvice ? "🧠" : "✨"}</span> 
+                  {loadingAdvice ? "L'IA sta pensando..." : "Analisi BollettaChiara"}
                 </h3>
-                {loadingAdvice ? <div className="space-y-4 animate-pulse"><div className="h-3 bg-slate-100 rounded-full w-3/4"></div><div className="h-3 bg-slate-100 rounded-full w-full"></div></div> : 
-                <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed bg-slate-50/50 p-6 rounded-2xl border border-slate-100" dangerouslySetInnerHTML={{ __html: advice?.replace(/\n/g, '<br/>') || '' }} />}
+
+                {loadingAdvice ? (
+                    <div className="space-y-8 py-4">
+                        <div className="text-center space-y-4">
+                            <p className="text-slate-600 font-bold animate-pulse transition-all duration-500 min-h-[24px]">
+                                {LOADING_MESSAGES[loadingMessageIndex]}
+                            </p>
+                            <div className="flex justify-center gap-1">
+                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-bounce"></div>
+                            </div>
+                        </div>
+
+                        <div className="bg-amber-50 rounded-2xl p-6 border border-amber-100 text-center animate-in fade-in zoom-in duration-700 delay-300">
+                             <p className="text-[11px] font-black text-amber-800 uppercase tracking-widest mb-2">Supporta lo sviluppo</p>
+                             <p className="text-xs text-amber-700 mb-4">Mentre l'IA calcola il tuo risparmio, valuta di offrire un caffè allo sviluppatore per mantenere l'app gratuita!</p>
+                             <a 
+                                href="https://www.paypal.com/paypalme/saxumb" 
+                                target="_blank" rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:scale-105 transition-transform"
+                             >
+                                ☕ Offri un caffè ora
+                             </a>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="prose prose-slate max-w-none text-slate-600 leading-relaxed bg-slate-50/50 p-6 rounded-2xl border border-slate-100 animate-in fade-in duration-500" dangerouslySetInnerHTML={{ __html: advice?.replace(/\n/g, '<br/>') || '' }} />
+                )}
               </div>
             )}
+            
+            <div className={!advice && !loadingAdvice ? 'mt-0' : 'mt-8'}>
+              <DonationCard />
+            </div>
           </div>
         </div>
       </main>
@@ -193,7 +267,7 @@ const App: React.FC = () => {
             <div className="flex items-center gap-2">
               <div className={`w-2 h-2 rounded-full ${pwaActive ? 'bg-green-500 animate-pulse' : 'bg-slate-300'}`}></div>
               <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-                {pwaActive ? 'PWA: Attiva (Store Ready)' : 'PWA: Caricamento...'}
+                {pwaActive ? 'PWA: Attiva' : 'PWA: Caricamento...'}
               </span>
             </div>
             <div className="w-[1px] h-3 bg-slate-200"></div>
