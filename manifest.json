@@ -6,13 +6,13 @@
   "description": "L'intelligenza artificiale per analizzare, simulare e risparmiare sulle tue bollette Luce e Gas in Italia.",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2933/2933116.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/10832/10832132.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2933/2933116.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/10832/10832132.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "maskable"
@@ -38,12 +38,12 @@
     {
       "name": "Simulatore Luce",
       "url": "/?mode=luce",
-      "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/2933/2933116.png", "sizes": "192x192" }]
+      "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/10832/10832132.png", "sizes": "192x192" }]
     },
     {
       "name": "Simulatore Gas",
       "url": "/?mode=gas",
-      "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/2933/2933116.png", "sizes": "192x192" }]
+      "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/10832/10832132.png", "sizes": "192x192" }]
     }
   ],
   "start_url": "./index.html",

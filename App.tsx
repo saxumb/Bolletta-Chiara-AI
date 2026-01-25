@@ -180,9 +180,15 @@ const App: React.FC = () => {
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-20 flex items-center shadow-sm">
         <div className="container mx-auto px-6 flex items-center justify-between max-w-7xl">
           <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${isLuce ? 'bg-blue-600' : 'bg-orange-600'}`}>
-               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d={isLuce ? "M13 10V3L4 14h7v7l9-11h-7z" : "M17.657 18.657A8 8 0 016.343 7.343S7 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"} />
+            {/* NUOVO LOGO HYBRID ENERGY */}
+            <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-500 ${isLuce ? 'bg-blue-600' : 'bg-orange-600'}`}>
+               <svg viewBox="0 0 24 24" className="w-7 h-7 text-white" fill="currentColor">
+                  {/* Bolt (Luce) */}
+                  <path d="M11.5 2L3 13H10V22L18.5 11H11.5V2Z" className={isLuce ? 'opacity-100' : 'opacity-40'} />
+                  {/* Flame (Gas) Overlay stylizzato */}
+                  {!isLuce && (
+                    <path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" className="opacity-100 mix-blend-screen" />
+                  )}
                </svg>
             </div>
             <h1 className="text-xl font-black tracking-tight hidden sm:block">BOLLETTA<span className={isLuce ? 'text-blue-600' : 'text-orange-600'}>CHIARA</span></h1>
