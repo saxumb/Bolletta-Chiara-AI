@@ -1,18 +1,15 @@
 
-const CACHE_NAME = 'bollettachiara-v4';
-const OFFLINE_URL = 'index.html';
-
-const ASSETS = [
-  './',
+const CACHE_NAME = 'bollettachiara-v6';
+const OFFLINE_ASSETS = [
   'index.html',
-  'manifest.json',
-  'https://cdn.tailwindcss.com'
+  'manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS);
+      // Usiamo add invece di addAll per evitare che un singolo fallimento blocchi tutto
+      return Promise.allSettled(OFFLINE_ASSETS.map(asset => cache.add(asset)));
     })
   );
   self.skipWaiting();
@@ -30,12 +27,20 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.url.includes('generativelanguage.googleapis.com')) return;
+  // Non intercettare chiamate API esterne (Gemini)
+  if (event.request.url.includes('google') || event.request.url.includes('googleapis')) {
+    return;
+  }
 
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request).catch(() => {
-        if (event.request.mode === 'navigate') return caches.match(OFFLINE_URL);
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) return cachedResponse;
+      
+      return fetch(event.request).catch(() => {
+        // Fallback su index.html per navigazione offline
+        if (event.request.mode === 'navigate') {
+          return caches.match('index.html');
+        }
       });
     })
   );

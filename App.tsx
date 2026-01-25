@@ -40,7 +40,12 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.ready.then(() => setPwaActive(true));
+      // Timeout di sicurezza: se il SW non risponde in 3 secondi, mostriamo comunque lo stato (evita UI bloccata)
+      const timeout = setTimeout(() => setPwaActive(false), 3000);
+      navigator.serviceWorker.ready.then(() => {
+        clearTimeout(timeout);
+        setPwaActive(true);
+      }).catch(() => setPwaActive(false));
     }
   }, []);
 
@@ -276,7 +281,7 @@ const App: React.FC = () => {
             <div className="flex items-center gap-2">
               <div className={`w-2 h-2 rounded-full ${pwaActive ? 'bg-green-500 animate-pulse' : 'bg-slate-300'}`}></div>
               <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-                {pwaActive ? 'PWA: Attiva' : 'PWA: Caricamento...'}
+                {pwaActive ? 'PWA: Attiva' : 'PWA: Standby'}
               </span>
             </div>
             <div className="w-[1px] h-3 bg-slate-200"></div>

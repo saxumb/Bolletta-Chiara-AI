@@ -6,13 +6,13 @@
   "description": "L'intelligenza artificiale per analizzare, simulare e risparmiare sulle tue bollette Luce e Gas in Italia.",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/12185/12185966.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/4341/4341355.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/12185/12185966.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/4341/4341355.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "maskable"
@@ -20,7 +20,7 @@
   ],
   "screenshots": [
     {
-      "src": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426&ixlib=rb-4.0.3",
+      "src": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426",
       "sizes": "1280x720",
       "type": "image/jpg",
       "form_factor": "wide",
@@ -34,21 +34,11 @@
       "label": "Simulazione Costi Mensili"
     }
   ],
-  "shortcuts": [
-    {
-      "name": "Simulatore Luce",
-      "url": ".",
-      "icons": [{ "src": "https://cdn-icons-png.flaticon.com/512/12185/12185966.png", "sizes": "192x192" }]
-    }
-  ],
   "start_url": ".",
+  "scope": "./",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "minimal-ui"],
   "orientation": "portrait",
   "theme_color": "#2563eb",
   "background_color": "#f8fafc",
-  "categories": ["finance", "utilities", "productivity"],
-  "lang": "it-IT",
-  "dir": "ltr",
-  "prefer_related_applications": false
+  "lang": "it-IT"
 }
