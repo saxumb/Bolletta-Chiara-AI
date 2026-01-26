@@ -6,14 +6,14 @@
   "description": "L'intelligenza artificiale per analizzare, simulare e risparmiare sulle tue bollette Luce e Gas in Italia.",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2731/2731636.png",
-      "type": "image/png",
-      "sizes": "192x192",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMzAwIDEwMEwxNDAgMzIwaDEyMHYxMjBsMTYwLTIyMEgzMDB6IiBmaWxsPSIjM2I4MmY2Ii8+PHBhdGggZD0iTTMzMCAyMTBzNDUgNDAgNDUgOTUtMzAgNzAtNjUgNzAtNjUtMzAtNjUtNzBjMC05NSA2NS0xMjUgNjUtMTI1czEwIDIwIDEwIDUweiIgZmlsbD0iI2ZmY2M5OSIvPjwvc3ZnPg==",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
       "purpose": "any"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2731/2731636.png",
-      "type": "image/png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMzAwIDEwMEwxNDAgMzIwaDEyMHYxMjBsMTYwLTIyMEgzMDB6IiBmaWxsPSIjM2I4MmY2Ii8+PHBhdGggZD0iTTMzMCAyMTBzNDUgNDAgNDUgOTUtMzAgNzAtNjUgNzAtNjUtMzAtNjUtNzBjMC05NSA2NS0xMjUgNjUtMTI1czEwIDIwIDEwIDUweiIgZmlsbD0iI2ZmY2M5OSIvPjwvc3ZnPg==",
+      "type": "image/svg+xml",
       "sizes": "512x512",
       "purpose": "maskable"
     }

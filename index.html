@@ -15,7 +15,7 @@
     <meta name="apple-mobile-web-app-title" content="BollettaChiara">
     
     <!-- Icona App -->
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2731/2731636.png">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMzAwIDEwMEwxNDAgMzIwaDEyMHYxMjBsMTYwLTIyMEgzMDB6IiBmaWxsPSIjM2I4MmY2Ii8+PHBhdGggZD0iTTMzMCAyMTBzNDUgNDAgNDUgOTUtMzAgNzAtNjUgNzAtNjUtMzAtNjUtNzBjMC05NSA2NS0xMjUgNjUtMTI1czEwIDIwIDEwIDUweiIgZmlsbD0iI2ZmY2M5OSIvPjwvc3ZnPg==">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -42,13 +42,31 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => {
-                        console.log('BollettaChiara SW: Registrato con successo', reg.scope);
-                    })
-                    .catch(err => {
-                        console.error('BollettaChiara SW Error:', err);
-                    });
+                // Determine correctly the Service Worker path
+                const currentPath = window.location.pathname;
+                const swUrl = currentPath.substring(0, currentPath.lastIndexOf('/') + 1) + 'sw.js';
+                
+                // Only attempt registration if the document is active
+                if (document.readyState === 'complete') {
+                    navigator.serviceWorker.register(swUrl)
+                        .then(reg => {
+                            console.log('BollettaChiara SW: Registrato con successo', reg.scope);
+                        })
+                        .catch(err => {
+                            // Map of errors that are expected in preview/sandbox environments
+                            const isExpectedDevError = 
+                                err.name === 'SecurityError' || 
+                                err.name === 'InvalidStateError' ||
+                                err.message.includes('origin') ||
+                                err.message.includes('invalid state');
+
+                            if (isExpectedDevError) {
+                                console.warn('BollettaChiara SW: Registrazione sospesa in questo ambiente (Preview/Sandbox). Funzionerà regolarmente dopo il deploy su GitHub Pages.');
+                            } else {
+                                console.error('BollettaChiara SW Error:', err);
+                            }
+                        });
+                }
             });
         }
     </script>

@@ -26,7 +26,6 @@ const App: React.FC = () => {
   
   const adviceRef = useRef<HTMLDivElement>(null);
 
-  // Ciclo dei messaggi di caricamento per intrattenere l'utente
   useEffect(() => {
     let interval: number;
     if (loadingAdvice) {
@@ -79,7 +78,6 @@ const App: React.FC = () => {
       const monthlyKwh = n(inputs.monthlyKwh);
       let energyPrice = 0;
 
-      // Logic: Fixed vs Variable
       if (inputs.tariffTypeLuce === 'variable') {
         const pun = n(inputs.punValue);
         const spread = n(inputs.spreadLuce);
@@ -130,7 +128,6 @@ const App: React.FC = () => {
       const monthlySmc = n(inputs.monthlySmc);
       let gasPrice = 0;
       
-      // Logic: Fixed vs Variable
       if (inputs.tariffTypeGas === 'variable') {
         const psv = n(inputs.psvValue);
         const spread = n(inputs.spreadGas);
@@ -166,7 +163,6 @@ const App: React.FC = () => {
     setLoadingAdvice(true);
     setAdvice(null);
     
-    // Scroll immediato all'area di caricamento/risultati
     setTimeout(() => {
       adviceRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 100);
@@ -174,7 +170,6 @@ const App: React.FC = () => {
     try {
         const result = await getEnergyAdvice(inputs, results, mode);
         setAdvice(result);
-        // Scroll fine analisi per mostrare l'inizio del testo
         setTimeout(() => {
           adviceRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
@@ -192,21 +187,11 @@ const App: React.FC = () => {
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-20 flex items-center shadow-sm">
         <div className="container mx-auto px-6 flex items-center justify-between max-w-7xl">
           <div className="flex items-center gap-3">
-            {/* LOGO HYBRID ENERGY: Bolt Azzurro + Fiamma Arancione */}
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-500 overflow-hidden bg-white border border-slate-100`}>
-               <svg viewBox="0 0 24 24" className="w-8 h-8">
-                  {/* Lightning Bolt (Luce) - Azzurro */}
-                  <path 
-                    d="M11 2L4 14H11V22L18 10H11V2Z" 
-                    className={`transition-all duration-500 ${isLuce ? 'fill-blue-500 scale-110' : 'fill-blue-200 scale-90'}`}
-                    style={{ transformOrigin: 'center' }}
-                  />
-                  {/* Flame (Gas) - Arancione */}
-                  <path 
-                    d="M14 13C14 16 12 18 12 18C9.23858 18 7 15.7614 7 13C7 7 12 2 12 2C12 2 13 4 13 7" 
-                    className={`transition-all duration-500 ${!isLuce ? 'fill-orange-500 scale-110 translate-x-1' : 'fill-orange-200 scale-75 translate-x-1'}`}
-                    style={{ transformOrigin: 'center' }}
-                  />
+            {/* OFFICIAL LOGO: Bolt + Peach Drop */}
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-500 overflow-hidden bg-white border border-slate-100">
+               <svg viewBox="0 0 512 512" className="w-10 h-10">
+                  <path d="M300 100 L140 320 H260 V440 L420 220 H300 Z" fill="#3b82f6" />
+                  <path d="M330 210 C330 210 375 250 375 305 C375 345 345 375 310 375 C275 375 245 345 245 305 C245 210 310 180 310 180 C310 180 320 200 320 230" fill="#ffcc99" />
                </svg>
             </div>
             <h1 className="text-xl font-black tracking-tight hidden sm:block">BOLLETTA<span className={isLuce ? 'text-blue-600' : 'text-orange-600'}>CHIARA</span></h1>
@@ -279,7 +264,6 @@ const App: React.FC = () => {
               </div>
             )}
             
-            {/* DonationCard principale: visibile solo quando NON sta caricando l'analisi */}
             {!loadingAdvice && (
               <div className={!advice ? 'mt-0' : 'mt-8'}>
                 <DonationCard />
