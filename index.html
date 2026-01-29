@@ -15,7 +15,7 @@
     <meta name="apple-mobile-web-app-title" content="BollettaChiara">
     
     <!-- Apple Icon -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMzAwIDEwMEwxNDAgMzIwaDEyMHYxMjBsMTYwLTIyMEgzMDB6IiBmaWxsPSIjM2I4MmY2Ii8+PHBhdGggZD0iTTMzMCAyMTBzNDUgNDAgNDUgOTUtMzAgNzAtNjUgNzAtNjUtMzAtNjUtNzBjMC05NSA2NS0xMjUgNjUtMTI1czEwIDIwIDEwIDUweiIgZmlsbD0iI2ZmY2M5OSIvPjwvc3ZnPg==">
+    <link rel="apple-touch-icon" href="icon-bc-192.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
@@ -35,12 +35,18 @@
     </style>
     
     <script>
+        // Registrazione robusta del Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // Il percorso './sw.js' è relativo alla pagina corrente nella sottocartella
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('SW OK:', reg.scope))
-                    .catch(err => console.error('SW KO:', err));
+                // Calcoliamo il percorso corretto rispetto alla posizione attuale della pagina
+                const currentPath = window.location.pathname;
+                const swUrl = currentPath.endsWith('/') ? currentPath + 'sw.js' : currentPath.substring(0, currentPath.lastIndexOf('/') + 1) + 'sw.js';
+                
+                navigator.serviceWorker.register(swUrl)
+                    .then(reg => console.log('ServiceWorker registrato con successo:', reg.scope))
+                    .catch(err => {
+                        console.warn('Registrazione ServiceWorker fallita (normale in ambiente preview):', err);
+                    });
             });
         }
     </script>

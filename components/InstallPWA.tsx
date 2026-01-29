@@ -52,7 +52,7 @@ const InstallPWA: React.FC = () => {
       <div className="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-2xl shadow-inner overflow-hidden flex-shrink-0">
-             <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMzAwIDEwMEwxNDAgMzIwaDEyMHYxMjBsMTYwLTIyMEgzMDB6IiBmaWxsPSIjM2I4MmY2Ii8+PHBhdGggZD0iTTMzMCAyMTBzNDUgNDAgNDUgOTUtMzAgNzAtNjUgNzAtNjUtMzAtNjUtNzBjMC05NSA2NS0xMjUgNjUtMTI1czEwIDIwIDIwIDUweiIgZmlsbD0iI2ZmY2M5OSIvPjwvc3ZnPg==" className="w-10 h-10" alt="App Icon" />
+             <img src="icon-bc-192.png" className="w-10 h-10 object-contain" alt="App Icon" />
           </div>
           <div>
             <h4 className="text-sm font-black tracking-tight">Installa BollettaChiara</h4>
@@ -62,8 +62,8 @@ const InstallPWA: React.FC = () => {
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
           {isIOS ? (
-            <div className="bg-white/10 px-4 py-2 rounded-xl text-[10px] font-bold flex items-center gap-2">
-              Tocca <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg> e poi "Aggiungi a Home"
+            <div className="bg-white/10 px-4 py-2 rounded-xl text-[10px] font-bold flex items-center gap-2 text-center">
+              Tocca <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="inline"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"/></svg> e poi "Aggiungi a Home"
             </div>
           ) : (
             <button 
