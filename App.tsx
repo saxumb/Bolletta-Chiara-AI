@@ -4,6 +4,7 @@ import { InputCard } from './components/InputCard';
 import ResultCard from './components/ResultCard';
 import DonationCard from './components/DonationCard';
 import ExitModal from './components/ExitModal';
+import InstallPWA from './components/InstallPWA';
 import { BillInput, BillBreakdown, SimulationMode } from './types';
 import { DEFAULT_INPUTS, RATES, ARERA_DISPATCHING, GAS_RATES } from './constants';
 import { getEnergyAdvice } from './services/geminiService';
@@ -182,12 +183,12 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 pb-12 font-sans safe-top safe-bottom">
+      <InstallPWA />
       <ExitModal isOpen={isExitModalOpen} onClose={() => setIsExitModalOpen(false)} isLuce={isLuce} />
 
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-20 flex items-center shadow-sm">
         <div className="container mx-auto px-6 flex items-center justify-between max-w-7xl">
           <div className="flex items-center gap-3">
-             {/* DYNAMIC LOGO based on mode */}
             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-500 overflow-hidden border border-slate-100 ${isLuce ? 'bg-blue-50' : 'bg-orange-50'}`}>
                {isLuce ? (
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,26 +1,24 @@
 
-const CACHE_NAME = 'bollettachiara-v10'; // Incrementato versione
+const CACHE_NAME = 'bollettachiara-v11';
 const STATIC_ASSETS = [
   './',
   'index.html',
   'manifest.json',
-  'index.css' // Se esiste, altrimenti verrà ignorato
+  'index.tsx',
+  'App.tsx'
 ];
 
-// Domini permessi per il caching runtime (CDN essenziali per la tua app)
 const ALLOWED_HOSTS = [
   'cdn.tailwindcss.com',
   'fonts.googleapis.com',
   'fonts.gstatic.com',
-  'esm.sh',
-  'images.unsplash.com' // Per le immagini demo
+  'esm.sh'
 ];
 
 self.addEventListener('install', (event) => {
-  self.skipWaiting(); // Forza l'attivazione immediata del nuovo SW
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      // Proviamo a cacheare gli asset statici core
       return cache.addAll(STATIC_ASSETS).catch(err => {
         console.warn('SW Install: Alcuni asset non trovati (non bloccante):', err);
       });
@@ -36,66 +34,54 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
-  self.clients.claim(); // Prende il controllo immediato delle pagine aperte
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // 1. Ignora API AI o Analytics
+  // Ignora le chiamate API
   if (url.pathname.includes('google') && url.pathname.includes('generateContent')) {
     return;
   }
 
-  // 2. Gestione Navigazione (HTML) -> Network First, fallback Cache
-  // Questo assicura che l'utente veda sempre l'ultima versione dell'app se online
+  // Strategia Network First per la navigazione
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
-          // Se la rete risponde, aggiorniamo la cache dell'HTML e restituiamo la pagina
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
           return response;
         })
         .catch(() => {
-          // Se offline, restituiamo l'index dalla cache
           return caches.match('index.html').then(res => res || caches.match('./'));
         })
     );
     return;
   }
 
-  // 3. Gestione Asset Esterni (CDN) e Statici -> Stale-While-Revalidate
-  // Restituisce subito dalla cache (veloce), poi aggiorna in background
+  // Stale-While-Revalidate per asset statici e CDN
   const isAllowedHost = ALLOWED_HOSTS.some(host => url.hostname.includes(host));
-  const isStaticAsset = url.pathname.match(/\.(png|jpg|jpeg|svg|json|css|js|woff2)$/);
+  const isStaticAsset = url.pathname.match(/\.(png|jpg|jpeg|svg|json|css|js|tsx|jsx|woff2)$/);
 
   if (isAllowedHost || isStaticAsset) {
     event.respondWith(
       caches.open(CACHE_NAME).then(async (cache) => {
         const cachedResponse = await cache.match(event.request);
-        
-        // Logica Stale-While-Revalidate
         const fetchPromise = fetch(event.request).then((networkResponse) => {
-          // Cacheiamo solo risposte valide (200) o opaque (0, per CDN cors mode 'no-cors')
           if (networkResponse.ok || networkResponse.type === 'opaque') {
              cache.put(event.request, networkResponse.clone());
           }
           return networkResponse;
-        }).catch(err => {
-          // Network fallito, non facciamo nulla (abbiamo la cache)
-          // console.log('SW: Network fetch failed for', url.href);
-        });
+        }).catch(() => {});
 
-        // Se c'è in cache, lo restituiamo SUBITO, mentre la fetch aggiorna dietro le quinte
         return cachedResponse || fetchPromise;
       })
     );
     return;
   }
 
-  // 4. Default -> Cache First, Network Fallback per tutto il resto
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       return cachedResponse || fetch(event.request);

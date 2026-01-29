@@ -42,25 +42,12 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                const currentPath = window.location.pathname;
-                const swUrl = currentPath.substring(0, currentPath.lastIndexOf('/') + 1) + 'sw.js';
-                
-                navigator.serviceWorker.register(swUrl)
+                navigator.serviceWorker.register('sw.js')
                     .then(reg => {
-                        console.log('BollettaChiara SW: Registrato con successo', reg.scope);
+                        console.log('BollettaChiara SW: Registrato', reg.scope);
                     })
                     .catch(err => {
-                        const isIgnorable = 
-                            err.name === 'SecurityError' || 
-                            err.name === 'InvalidStateError' || 
-                            err.message.includes('origin') || 
-                            err.message.includes('invalid state');
-
-                        if (isIgnorable) {
-                            console.warn('BollettaChiara SW: Registrazione non disponibile in questo ambiente (Security/Origin restriction). Funzionerà regolarmente dopo il deploy.');
-                        } else {
-                            console.error('BollettaChiara SW Error:', err);
-                        }
+                        console.warn('BollettaChiara SW Warning:', err.message);
                     });
             });
         }

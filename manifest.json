@@ -18,24 +18,8 @@
       "purpose": "maskable"
     }
   ],
-  "screenshots": [
-    {
-      "src": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426",
-      "sizes": "1280x720",
-      "type": "image/jpg",
-      "form_factor": "wide",
-      "label": "Analisi AI della Bolletta"
-    },
-    {
-      "src": "https://images.unsplash.com/photo-1551288049-bbbda536339a?auto=format&fit=crop&q=80&w=1000",
-      "sizes": "1000x1500",
-      "type": "image/jpg",
-      "form_factor": "narrow",
-      "label": "Simulazione Costi Mensili"
-    }
-  ],
-  "start_url": "https://saxumb.github.io/Bolletta-Chiara-AI/",
-  "scope": "/Bolletta-Chiara-AI/",
+  "start_url": "index.html",
+  "scope": ".",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#0f172a",
