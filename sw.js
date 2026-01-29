@@ -1,10 +1,10 @@
 
-const CACHE_NAME = 'bc-pwa-v1';
+const CACHE_NAME = 'bc-pwa-v2';
 const ASSETS = [
   './',
-  './index.html',
-  './manifest.json',
-  './index.tsx'
+  'index.html',
+  'manifest.json',
+  'index.tsx'
 ];
 
 self.addEventListener('install', (event) => {
@@ -17,16 +17,21 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => Promise.all(
-      keys.map((key) => {
-        if (key !== CACHE_NAME) return caches.delete(key);
-      })
+      keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
     ))
   );
   self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
-  // Risponde con la cache o va in rete (necessario per installabilità)
+  // Gestione speciale per la navigazione per evitare il 404 offline
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match('index.html'))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((response) => {
       return response || fetch(event.request);

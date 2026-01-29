@@ -1,9 +1,9 @@
 
 {
-  "id": "bollettachiara-ai-app",
+  "id": "bolletta-chiara-ai-pwa",
   "short_name": "BollettaChiara",
   "name": "BollettaChiara AI",
-  "description": "Analisi e simulazione bollette Luce e Gas con IA.",
+  "description": "Simulatore intelligente per bollette Luce e Gas.",
   "icons": [
     {
       "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMzAwIDEwMEwxNDAgMzIwaDEyMHYxMjBsMTYwLTIyMEgzMDB6IiBmaWxsPSIjM2I4MmY2Ii8+PHBhdGggZD0iTTMzMCAyMTBzNDUgNDAgNDUgOTUtMzAgNzAtNjUgNzAtNjUtMzAtNjUtNzBjMC05NSA2NS0xMjUgNjUtMTI1czEwIDIwIDEwIDUweiIgZmlsbD0iI2ZmY2M5OSIvPjwvc3ZnPg==",
@@ -18,10 +18,10 @@
       "purpose": "any"
     }
   ],
-  "start_url": "./index.html",
+  "start_url": "/Bolletta-Chiara-AI/index.html",
+  "scope": "/Bolletta-Chiara-AI/",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#0f172a",
-  "orientation": "portrait",
-  "scope": "/"
+  "orientation": "portrait"
 }
