@@ -1,8 +1,11 @@
 
-const CACHE_NAME = 'bollettachiara-v3';
+const CACHE_NAME = 'bollettachiara-v4';
 const ASSETS = [
+  './',
   'index.html',
   'manifest.json',
+  'icon-bc-192.png',
+  'icon-bc-512.png',
   'index.tsx',
   'App.tsx'
 ];

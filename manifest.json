@@ -17,8 +17,8 @@
       "purpose": "any"
     }
   ],
-  "start_url": "index.html",
-  "scope": "./",
+  "start_url": "/Bolletta-Chiara-AI/",
+  "scope": "/Bolletta-Chiara-AI/",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#0f172a",

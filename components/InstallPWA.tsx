@@ -47,12 +47,25 @@ const InstallPWA: React.FC = () => {
 
   if (!isVisible) return null;
 
+  // Usa ./ per assicurarsi che il percorso sia relativo alla cartella corrente (GitHub Pages subpath)
+  const iconSrc = "./icon-bc-192.png";
+
   return (
     <div className="fixed bottom-6 left-6 right-6 z-[100] animate-in slide-in-from-bottom-10 fade-in duration-500">
       <div className="bg-slate-900 text-white p-5 rounded-[2rem] shadow-2xl border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-2xl shadow-inner overflow-hidden flex-shrink-0">
-             <img src="icon-bc-192.png" className="w-10 h-10 object-contain" alt="App Icon" />
+          <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-inner overflow-hidden flex-shrink-0">
+             <img 
+               src={iconSrc} 
+               className="w-10 h-10 object-contain" 
+               alt="App Icon"
+               onError={(e) => {
+                 // Fallback se l'immagine fisica manca ancora nel repo
+                 (e.target as HTMLImageElement).style.display = 'none';
+                 const parent = (e.target as HTMLElement).parentElement;
+                 if (parent) parent.innerHTML = '<span class="text-xl">💡</span>';
+               }}
+             />
           </div>
           <div>
             <h4 className="text-sm font-black tracking-tight">Installa BollettaChiara</h4>
