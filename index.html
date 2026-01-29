@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>BollettaChiara AI - Trasparenza Energia</title>
     
-    <!-- PWA Settings -->
+    <!-- PWA Essential -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <meta name="mobile-web-app-capable" content="yes">
@@ -14,41 +14,32 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BollettaChiara">
     
-    <!-- Icona App -->
+    <!-- Apple Icon -->
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0id2hpdGUiLz48cGF0aCBkPSJNMzAwIDEwMEwxNDAgMzIwaDEyMHYxMjBsMTYwLTIyMEgzMDB6IiBmaWxsPSIjM2I4MmY2Ii8+PHBhdGggZD0iTTMzMCAyMTBzNDUgNDAgNDUgOTUtMzAgNzAtNjUgNzAtNjUtMzAtNjUtNzBjMC05NSA2NS0xMjUgNjUtMTI1czEwIDIwIDEwIDUweiIgZmlsbD0iI2ZmY2M5OSIvPjwvc3ZnPg==">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --sat: env(safe-area-inset-top);
-            --sar: env(safe-area-inset-right);
             --sab: env(safe-area-inset-bottom);
-            --sal: env(safe-area-inset-left);
         }
         body { 
             font-family: 'Inter', sans-serif; 
             -webkit-tap-highlight-color: transparent;
-            overscroll-behavior: none;
-            overflow-x: hidden;
             background-color: #f8fafc;
         }
         .safe-top { padding-top: var(--sat); }
         .safe-bottom { padding-bottom: var(--sab); }
-        .no-select { -webkit-user-select: none; user-select: none; }
     </style>
     
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => {
-                        console.log('BollettaChiara SW: Registrato', reg.scope);
-                    })
-                    .catch(err => {
-                        console.warn('BollettaChiara SW Warning:', err.message);
-                    });
+                navigator.serviceWorker.register('./sw.js', { scope: './' })
+                    .then(reg => console.log('SW OK'))
+                    .catch(err => console.log('SW KO', err));
             });
         }
     </script>
@@ -69,7 +60,7 @@
 </script>
 <link rel="stylesheet" href="/index.css">
 </head>
-<body class="bg-slate-50 text-slate-900 no-select">
+<body class="bg-slate-50 text-slate-900 overflow-x-hidden">
     <div id="root"></div>
     <script type="module" src="./index.tsx"></script>
 <script type="module" src="/index.tsx"></script>
