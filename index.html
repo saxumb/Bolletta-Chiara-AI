@@ -42,31 +42,26 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // Determine correctly the Service Worker path
                 const currentPath = window.location.pathname;
                 const swUrl = currentPath.substring(0, currentPath.lastIndexOf('/') + 1) + 'sw.js';
                 
-                // Only attempt registration if the document is active
-                if (document.readyState === 'complete') {
-                    navigator.serviceWorker.register(swUrl)
-                        .then(reg => {
-                            console.log('BollettaChiara SW: Registrato con successo', reg.scope);
-                        })
-                        .catch(err => {
-                            // Map of errors that are expected in preview/sandbox environments
-                            const isExpectedDevError = 
-                                err.name === 'SecurityError' || 
-                                err.name === 'InvalidStateError' ||
-                                err.message.includes('origin') ||
-                                err.message.includes('invalid state');
+                navigator.serviceWorker.register(swUrl)
+                    .then(reg => {
+                        console.log('BollettaChiara SW: Registrato con successo', reg.scope);
+                    })
+                    .catch(err => {
+                        const isIgnorable = 
+                            err.name === 'SecurityError' || 
+                            err.name === 'InvalidStateError' || 
+                            err.message.includes('origin') || 
+                            err.message.includes('invalid state');
 
-                            if (isExpectedDevError) {
-                                console.warn('BollettaChiara SW: Registrazione sospesa in questo ambiente (Preview/Sandbox). Funzionerà regolarmente dopo il deploy su GitHub Pages.');
-                            } else {
-                                console.error('BollettaChiara SW Error:', err);
-                            }
-                        });
-                }
+                        if (isIgnorable) {
+                            console.warn('BollettaChiara SW: Registrazione non disponibile in questo ambiente (Security/Origin restriction). Funzionerà regolarmente dopo il deploy.');
+                        } else {
+                            console.error('BollettaChiara SW Error:', err);
+                        }
+                    });
             });
         }
     </script>

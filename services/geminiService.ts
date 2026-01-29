@@ -78,13 +78,22 @@ export const getEnergyAdvice = async (inputs: BillInput, results: BillBreakdown,
     RICHIESTA:
     Fornisci un'analisi "Chiara" e 3 consigli pratici per il risparmio.
     
+    ISTRUZIONI DI FORMATTAZIONE (IMPORTANTE):
+    - NON USARE MARKDOWN. Non usare simboli come #, *, o trattini markdown.
+    - Genera SOLO codice HTML valido e pulito.
+    - Usa il tag <h3> per i titoli delle sezioni.
+    - Usa il tag <p> per i paragrafi.
+    - Usa il tag <strong> per evidenziare numeri e concetti chiave.
+    - Usa i tag <ul> e <li> per le liste dei consigli.
+    - Non includere i tag <html>, <head> o <body>, restituisci solo il contenuto.
+    
     ${isLuce ? `
-    Analisi specifica richiesta:
+    Analisi specifica richiesta nel testo:
     1. Valuta il dimensionamento della potenza (${inputs.powerKw} kW).
     2. Commenta la convenienza della tariffa scelta (${inputs.tariffTypeLuce === 'variable' ? 'Variabile PUN' : 'Fissa'}) rispetto all'attuale mercato.
     ` : ''}
 
-    Usa uno stile professionale, empatico e molto diretto. Formatta in Markdown.
+    Usa uno stile professionale, empatico e molto diretto.
   `;
 
   try {
@@ -95,6 +104,6 @@ export const getEnergyAdvice = async (inputs: BillInput, results: BillBreakdown,
     return response.text || "Non è stato possibile generare l'analisi al momento.";
   } catch (error) {
     console.error("Error fetching Gemini advice:", error);
-    return "Errore nella connessicatione con l'AI di BollettaChiara. Riprova tra poco.";
+    return "Errore nella connessione con l'AI di BollettaChiara. Riprova tra poco.";
   }
 };
