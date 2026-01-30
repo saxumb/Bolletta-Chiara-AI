@@ -47,8 +47,8 @@ const InstallPWA: React.FC = () => {
 
   if (!isVisible) return null;
 
-  // Usa ./ per assicurarsi che il percorso sia relativo alla cartella corrente (GitHub Pages subpath)
-  const iconSrc = "./icon-bc-192.png";
+  // Il percorso deve essere relativo alla base del sito su GitHub Pages
+  const iconSrc = "./assets/icon-bc-192.png";
 
   return (
     <div className="fixed bottom-6 left-6 right-6 z-[100] animate-in slide-in-from-bottom-10 fade-in duration-500">
@@ -60,7 +60,7 @@ const InstallPWA: React.FC = () => {
                className="w-10 h-10 object-contain" 
                alt="App Icon"
                onError={(e) => {
-                 // Fallback se l'immagine fisica manca ancora nel repo
+                 // Fallback con emoji se l'icona fallisce (es. file non ancora caricato su GitHub)
                  (e.target as HTMLImageElement).style.display = 'none';
                  const parent = (e.target as HTMLElement).parentElement;
                  if (parent) parent.innerHTML = '<span class="text-xl">💡</span>';

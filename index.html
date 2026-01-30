@@ -15,7 +15,7 @@
     <meta name="apple-mobile-web-app-title" content="BollettaChiara">
     
     <!-- Apple Icon -->
-    <link rel="apple-touch-icon" href="icon-bc-192.png">
+    <link rel="apple-touch-icon" href="assets/icon-bc-192.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
@@ -38,14 +38,13 @@
         // Registrazione robusta del Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // Calcoliamo il percorso corretto rispetto alla posizione attuale della pagina
                 const currentPath = window.location.pathname;
                 const swUrl = currentPath.endsWith('/') ? currentPath + 'sw.js' : currentPath.substring(0, currentPath.lastIndexOf('/') + 1) + 'sw.js';
                 
                 navigator.serviceWorker.register(swUrl)
                     .then(reg => console.log('ServiceWorker registrato con successo:', reg.scope))
                     .catch(err => {
-                        console.warn('Registrazione ServiceWorker fallita (normale in ambiente preview):', err);
+                        console.warn('Registrazione ServiceWorker fallita:', err);
                     });
             });
         }

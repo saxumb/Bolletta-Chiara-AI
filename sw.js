@@ -1,11 +1,11 @@
 
-const CACHE_NAME = 'bollettachiara-v4';
+const CACHE_NAME = 'bollettachiara-v6';
 const ASSETS = [
   './',
   'index.html',
   'manifest.json',
-  'icon-bc-192.png',
-  'icon-bc-512.png',
+  'assets/icon-bc-192.png',
+  'assets/icon-bc-512.png',
   'index.tsx',
   'App.tsx'
 ];
@@ -13,7 +13,10 @@ const ASSETS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS).catch(err => console.log("Caching asset saltato:", err));
+      // Usiamo una strategia più permissiva per il caching degli asset iniziali
+      return Promise.allSettled(
+        ASSETS.map(url => cache.add(url))
+      ).then(() => console.log("Cache inizializzata con asset in /assets/"));
     })
   );
   self.skipWaiting();
