@@ -1,11 +1,11 @@
 
-const CACHE_NAME = 'bollettachiara-v7';
+const CACHE_NAME = 'bollettachiara-v8';
 const ASSETS = [
   './',
   'index.html',
   'manifest.json',
-  '/Bolletta-Chiara-AI/assets/icon-bc-192.png',
-  '/Bolletta-Chiara-AI/assets/icon-bc-512.png',
+  'assets/icon-bc-192.png',
+  'assets/icon-bc-512.png',
   'index.tsx',
   'App.tsx'
 ];
@@ -15,7 +15,7 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME).then((cache) => {
       return Promise.allSettled(
         ASSETS.map(url => cache.add(url))
-      ).then(() => console.log("Cache v7 inizializzata"));
+      ).then(() => console.log("Cache v8 inizializzata"));
     })
   );
   self.skipWaiting();

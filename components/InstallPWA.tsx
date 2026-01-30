@@ -43,8 +43,8 @@ const InstallPWA: React.FC = () => {
 
   if (!isVisible) return null;
 
-  // Percorso assoluto coerente con manifest e GitHub Pages
-  const iconSrc = "/Bolletta-Chiara-AI/assets/icon-bc-192.png";
+  // Percorso relativo pulito
+  const iconSrc = "assets/icon-bc-192.png";
 
   return (
     <div className="fixed bottom-6 left-6 right-6 z-[100] animate-in slide-in-from-bottom-10 fade-in duration-500">
