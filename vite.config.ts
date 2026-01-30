@@ -8,7 +8,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
-    assetsDir: 'assets',
+    // Rimuovendo assetsDir evitiamo la confusione assets/assets/
+    assetsDir: '', 
     rollupOptions: {
       input: {
         main: './index.html',

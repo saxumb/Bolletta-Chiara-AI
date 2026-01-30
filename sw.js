@@ -1,13 +1,11 @@
 
-const CACHE_NAME = 'bollettachiara-v8';
+const CACHE_NAME = 'bollettachiara-v10';
 const ASSETS = [
-  './',
-  'index.html',
-  'manifest.json',
-  'assets/icon-bc-192.png',
-  'assets/icon-bc-512.png',
-  'index.tsx',
-  'App.tsx'
+  '/Bolletta-Chiara-AI/',
+  '/Bolletta-Chiara-AI/index.html',
+  '/Bolletta-Chiara-AI/manifest.json',
+  '/Bolletta-Chiara-AI/assets/icon-bc-192.png',
+  '/Bolletta-Chiara-AI/assets/icon-bc-512.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -15,7 +13,7 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME).then((cache) => {
       return Promise.allSettled(
         ASSETS.map(url => cache.add(url))
-      ).then(() => console.log("Cache v8 inizializzata"));
+      ).then(() => console.log("Cache v10 inizializzata"));
     })
   );
   self.skipWaiting();
@@ -34,7 +32,7 @@ self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request).catch(() => {
-        return caches.match('index.html') || caches.match('./index.html');
+        return caches.match('/Bolletta-Chiara-AI/index.html') || caches.match('/Bolletta-Chiara-AI/');
       })
     );
     return;
