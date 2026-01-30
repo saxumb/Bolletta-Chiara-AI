@@ -7,17 +7,14 @@ const InstallPWA: React.FC = () => {
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
-    // Verifica se è già installata (standalone mode)
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
                         (window.navigator as any).standalone === true;
     
     if (isStandalone) return;
 
-    // Rileva iOS
     const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
     setIsIOS(ios);
 
-    // Cattura l'evento di installazione su Android/Chrome
     const handler = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
@@ -26,7 +23,6 @@ const InstallPWA: React.FC = () => {
 
     window.addEventListener('beforeinstallprompt', handler);
     
-    // Su iOS facciamo vedere il messaggio dopo 5 secondi se non è standalone
     if (ios) {
       const timer = setTimeout(() => setIsVisible(true), 5000);
       return () => clearTimeout(timer);
@@ -47,8 +43,8 @@ const InstallPWA: React.FC = () => {
 
   if (!isVisible) return null;
 
-  // Il percorso deve essere relativo alla base del sito su GitHub Pages
-  const iconSrc = "./assets/icon-bc-192.png";
+  // Percorso assoluto coerente con manifest e GitHub Pages
+  const iconSrc = "/Bolletta-Chiara-AI/assets/icon-bc-192.png";
 
   return (
     <div className="fixed bottom-6 left-6 right-6 z-[100] animate-in slide-in-from-bottom-10 fade-in duration-500">
@@ -60,7 +56,6 @@ const InstallPWA: React.FC = () => {
                className="w-10 h-10 object-contain" 
                alt="App Icon"
                onError={(e) => {
-                 // Fallback con emoji se l'icona fallisce (es. file non ancora caricato su GitHub)
                  (e.target as HTMLImageElement).style.display = 'none';
                  const parent = (e.target as HTMLElement).parentElement;
                  if (parent) parent.innerHTML = '<span class="text-xl">💡</span>';
