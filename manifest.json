@@ -2,7 +2,10 @@
 {
   "short_name": "BollettaChiara",
   "name": "BollettaChiara AI",
-  "description": "Analisi intelligente bollette Luce e Gas.",
+  "id": "com.bollettachiara.ai",
+  "description": "Analisi intelligente bollette Luce e Gas con intelligenza artificiale.",
+  "lang": "it-IT",
+  "categories": ["finance", "utilities"],
   "icons": [
     {
       "src": "assets/icon-bc-192.png",
@@ -28,5 +31,6 @@
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#0f172a",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "display_override": ["standalone", "window-controls-overlay"]
 }
